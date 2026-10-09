@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* Inline so values like var(--enter-delay) resolve on the element using the class, not on :root. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-manrope);
+
+  --ease-screen: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-horse-enter: horse-enter 4.5s cubic-bezier(0.25, 0.8, 0.3, 1) var(--enter-delay, 0s)
+    both paused;
+  --animate-horse-run: horse-gallop 0.75s cubic-bezier(0.45, 0.05, 0.35, 1)
+    var(--enter-delay, 0s) 6 both paused;
+  --animate-horse-float: horse-float 6s ease-in-out infinite;
+  --animate-horse-gallop: horse-gallop 0.7s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
+  --animate-moon-hint: moon-hint 1.2s ease 2.8s forwards;
+  --animate-screen-in: screen-in 1.1s cubic-bezier(0.76, 0, 0.24, 1) both;
+  --animate-screen-out: screen-out 1s cubic-bezier(0.76, 0, 0.24, 1) both;
+  --animate-screen-fade: screen-fade 0.3s ease both;
+  --animate-content-in: content-in 1.1s cubic-bezier(0.76, 0, 0.24, 1) both;
+  --animate-content-out: content-out 1s cubic-bezier(0.76, 0, 0.24, 1) both;
+  --animate-photo-in: photo-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
+  --animate-intro-in: photo-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+}
+
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  }
+}
+
+/* Mouse parallax: --mx/--my are set on <main> by HomeScene, --depth on each layer. */
+@utility parallax {
+  transform: translate3d(
+    calc(var(--mx, 0) * var(--depth, 0px)),
+    calc(var(--my, 0) * var(--depth, 0px) * 0.6),
+    0
+  );
+  will-change: transform;
+}
+
+@keyframes horse-enter {
+  0% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes horse-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes horse-gallop {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  30% {
+    transform: translate(-3px, -6px) rotate(4deg);
+  }
+  65% {
+    transform: translate(-4px, -2px) rotate(-3deg);
+  }
+}
+
+@keyframes moon-hint {
+  to {
+    opacity: 0.85;
+  }
+}
+
+/* Animates `translate` so it lines up with Tailwind's -translate-y-full resting state. */
+@keyframes screen-in {
+  from {
+    translate: 0 -100%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes screen-out {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: 0 -100%;
+  }
+}
+
+@keyframes screen-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Counter-motion: the content trails the screen edge, so it reads as a reveal. */
+@keyframes content-in {
+  from {
+    transform: translateY(35%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes content-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(35%);
+  }
+}
+
+@keyframes photo-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
