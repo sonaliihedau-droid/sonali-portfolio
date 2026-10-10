@@ -12,6 +12,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-manrope);
+  --font-hand: var(--font-reenie);
 
   --ease-screen: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -30,6 +31,8 @@
   --animate-content-out: content-out 1s cubic-bezier(0.76, 0, 0.24, 1) both;
   --animate-photo-in: photo-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
   --animate-intro-in: photo-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+  /* Slides a track holding its content twice by one copy's width, so the loop has no seam. */
+  --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
 }
 
 @layer base {
@@ -150,5 +153,11 @@
     opacity: 1;
     transform: none;
     filter: none;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
   }
 }

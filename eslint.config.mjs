@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored from the Roughly registry (voidui.in/roughly) and kept as published.
+    "app/components/ui/roughly/**",
   ]),
 ]);
 

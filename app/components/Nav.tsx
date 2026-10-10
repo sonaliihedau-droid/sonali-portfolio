@@ -8,14 +8,14 @@ const LINKS = [
   { href: "/", label: "Home" },
   { href: "/#about", label: "About me" },
   { href: "/#projects", label: "Projects" },
-  { href: "/sketches", label: "Sketches" },
+  { href: "/#sketchbook", label: "Sketchbook" },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
 
   // On the home page, links stay in place: About me opens the About screen,
-  // Home and Projects close it and scroll to their part of the page.
+  // the others close it and scroll to their part of the page.
   const onClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     if (pathname !== "/" || (href !== "/" && !href.startsWith("/#"))) return;
     e.preventDefault();

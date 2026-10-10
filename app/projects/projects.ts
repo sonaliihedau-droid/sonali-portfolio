@@ -1,10 +1,24 @@
-export type ProjectImage = { src: string; width: number; height: number; alt: string };
+// `tag`: a handwritten label shown above the image, e.g. "Initial sketch".
+export type ProjectImage = { src: string; width: number; height: number; alt: string; tag?: string };
 
 // "hero": fills the whole window on desktop (cropped to fit), full width on phones.
 // "full": edge to edge, images joined with no gap so they read as one continuous artwork.
 // "inset": centred and narrower than the window, with space around it.
 // "portrait": a narrower inset for tall pages, so they don't run several screens long.
-export type ProjectSection = { layout: "hero" | "full" | "inset" | "portrait"; images: ProjectImage[] };
+// "text": a titled run of paragraphs, such as a synopsis or script. `marker` labels a paragraph,
+// e.g. "Past", where the story moves in time.
+export type ProjectSection =
+  | { layout: "hero" | "full" | "inset" | "portrait"; images: ProjectImage[] }
+  | { layout: "text"; title: string; paragraphs: { marker?: string; text: string }[] };
+
+// A decorative frame for a project's cover on the home page; the cover is placed in its window.
+// `window` is the empty area in the frame image, in the frame's own pixels.
+export type CoverFrame = {
+  src: string;
+  width: number;
+  height: number;
+  window: { x: number; y: number; width: number; height: number };
+};
 
 export type Project = {
   slug: string;
@@ -12,6 +26,7 @@ export type Project = {
   cover: string;
   width: number;
   height: number;
+  coverFrame?: CoverFrame;
   sections?: ProjectSection[];
 };
 
@@ -36,6 +51,15 @@ export const PROJECTS: Project[] = [
         ],
       },
       {
+        layout: "text",
+        title: "Synopsis",
+        paragraphs: [
+          {
+            text: "A young woman sitting in her quiet courtyard is reminded of her grandmother when sunlight reflects off her bangles. The memory takes her back to a tender childhood moment filled with love and everyday rituals. As the memories fade, she is left alone in the empty aangan, feeling the quiet absence of her grandmother.",
+          },
+        ],
+      },
+      {
         layout: "inset",
         images: [
           {
@@ -43,7 +67,53 @@ export const PROJECTS: Project[] = [
             width: 1920,
             height: 1080,
             alt: "Storyboard: kitchen and tea boiling, pouring the tea, walking outside to the courtyard, sitting on the charpai, a reflection on a bangle, a swirling transition to the past and a dragonfly flying in the aangan",
+            tag: "Storyboard",
           },
+        ],
+      },
+      {
+        layout: "text",
+        title: "Script",
+        paragraphs: [
+          {
+            marker: "Present",
+            text: "The sound of the stove slowly faded as the tea turned a deep amber color. The girl poured the hot tea into a cup, the warmth spreading into her hands. She stepped outside and sat on the old woven charpai. The afternoon sun was bright and the courtyard was silent.",
+          },
+          {
+            text: "As she lifted the cup, sunlight hit the bangles on her wrist. They shone and threw small reflections onto the dusty ground. She watched the light move, a soft, familiar smile on her face. The sparkle reminded her of something.",
+          },
+          {
+            marker: "Past",
+            text: "A dragonfly buzzed nearby. Under the shade of the large neem tree, her grandmother was resting on the charpai. Her cotton sari moved gently in the breeze. The six-year-old girl sat beside her with her legs folded, staring at her grandmother’s wrist. The green glass bangles shone brightly in the sunlight. They looked like jewels to the little girl.",
+          },
+          {
+            text: "Unable to stop herself, she reached out. Her small fingers tried hard to slide one bangle off her grandmother’s loose, wrinkled hand. Her tongue stuck out as she concentrated.",
+          },
+          { text: "Clink. The soft sound of glass broke the silence. The girl froze in fear." },
+          {
+            text: "Her grandmother opened one eye. She did not scold her. She picked up the bangle, wiped it on her sari, and slipped it onto the girl’s arm. It was too big and slid all the way to her elbow. Her grandmother smiled and placed a finger on her lips. “Shhh.” The girl laughed quietly.",
+          },
+          {
+            marker: "Present",
+            text: "The girl’s face stayed calm, her eyes gentle as she looked into the empty space in front of her. The courtyard filled with memories.",
+          },
+          {
+            text: "For a moment, she did not see the dry ground. She saw grandmother and her spreading white sheets out with spicy mango pickles drying in the sun. She saw they are water splashing from a bucket as they watered the plants. She saw herself sitting on the floor between her grandmother’s knees, the strong smell of coconut oil in the heat while wrinkled hands rubbed her hair and told her stories.",
+          },
+          {
+            text: "Slowly, the memories faded. The colors drained away until only the harsh sunlight remained. A lump rose in her throat. She looked at the tea in her hands. It was no longer warm. She could not drink it.",
+          },
+          {
+            text: "Her hand shook as she placed the cup on the edge of the charpai. She turned and walked away.",
+          },
+          {
+            text: "There was no movement. No grandmother. No laughter. Only the wide, sunlit Aangan, completely empty.",
+          },
+        ],
+      },
+      {
+        layout: "inset",
+        images: [
           {
             src: "/aangan/image3.png",
             width: 1920,
@@ -55,24 +125,28 @@ export const PROJECTS: Project[] = [
             width: 1920,
             height: 1080,
             alt: "Line drawing of a kitchen with carved cabinet doors, open shelves, a diamond-tiled backsplash and a gas stove",
+            tag: "Background · kitchen",
           },
           {
             src: "/aangan/image5.png",
             width: 1920,
             height: 1080,
             alt: "Clean line drawing of the courtyard layout with the charpai, iron gate, lamp post and potted plants",
+            tag: "Background · courtyard",
           },
           {
             src: "/aangan/image6.png",
             width: 1920,
             height: 1080,
             alt: "Colour studies: a tree stump, two terracotta pots of herbs, a leafy bush and a young tree",
+            tag: "Colour studies",
           },
           {
             src: "/aangan/image8.png",
             width: 1920,
             height: 1080,
             alt: "The final coloured courtyard: dappled shade, a charpai with a pillow, the iron gate and terracotta pots",
+            tag: "Final background",
           },
         ],
       },
@@ -84,12 +158,14 @@ export const PROJECTS: Project[] = [
             width: 1920,
             height: 1743,
             alt: "Title lettering explorations of आंगण in charcoal, leading to the final mustard brush version",
+            tag: "Title lettering",
           },
           {
             src: "/aangan/image10.png",
             width: 2480,
             height: 3508,
             alt: "Film poster: आंगण (Courtyard), a grandmother braiding a girl's hair on a rug in the courtyard. A short film by Sonali Hedau, guided by Saurabh Vyas",
+            tag: "Resulting poster",
           },
         ],
       },
@@ -101,6 +177,12 @@ export const PROJECTS: Project[] = [
     cover: "/kai/image1.png",
     width: 2486,
     height: 1423,
+    coverFrame: {
+      src: "/kai/frame-kai.jpeg",
+      width: 1350,
+      height: 1080,
+      window: { x: 183, y: 245, width: 971, height: 652 },
+    },
     sections: [
       {
         layout: "full",

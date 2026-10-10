@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Manrope } from "next/font/google";
+import { Geist, Geist_Mono, Manrope, Reenie_Beanie } from "next/font/google";
 import Nav from "./components/Nav";
 import "./globals.css";
 
@@ -18,6 +18,13 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
+// Handwriting, for tags and notes drawn onto project pages.
+const reenieBeanie = Reenie_Beanie({
+  variable: "--font-reenie",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Sonali — Illustration & Design",
   description: "Portfolio of illustrator and designer Sonali.",
@@ -27,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} h-full antialiased [scrollbar-gutter:stable]`}
+      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${reenieBeanie.variable} h-full antialiased [scrollbar-gutter:stable]`}
     >
       <body className="min-h-full flex flex-col">
         <Nav />
