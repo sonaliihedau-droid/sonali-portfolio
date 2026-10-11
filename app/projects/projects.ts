@@ -5,11 +5,37 @@ export type ProjectImage = { src: string; width: number; height: number; alt: st
 // "full": edge to edge, images joined with no gap so they read as one continuous artwork.
 // "inset": centred and narrower than the window, with space around it.
 // "portrait": a narrower inset for tall pages, so they don't run several screens long.
-// "text": a titled run of paragraphs, such as a synopsis or script. `marker` labels a paragraph,
-// e.g. "Past", where the story moves in time.
+// "small": a narrow column for small images, so they're never enlarged past their own size.
+// "text": a run of paragraphs, such as a synopsis or script. Without a title it continues the text
+// before it, e.g. after an image that interrupts a story.
+// "video": a YouTube film, embedded in the inset column. `youtubeId` is the id from the link.
+// "cutouts": groups of transparent illustrations laid out on a paper-coloured panel.
+// "site": a live website, embedded in a browser-style frame with a link to open it.
+// "strip": one row of images sharing the width equally, all visible at once.
+// "story": picture-book pages, each image beside the text it goes with, alternating sides.
+// "embed": an interactive viewer from another service (e.g. a flipbook), framed full width.
 export type ProjectSection =
-  | { layout: "hero" | "full" | "inset" | "portrait"; images: ProjectImage[] }
-  | { layout: "text"; title: string; paragraphs: { marker?: string; text: string }[] };
+  | { layout: "hero" | "full" | "inset" | "portrait" | "small"; images: ProjectImage[] }
+  | { layout: "text"; title?: string; paragraphs: TextBlock[] }
+  | { layout: "video"; youtubeId: string; title: string }
+  | { layout: "cutouts"; groups: CutoutGroup[] }
+  | { layout: "site"; url: string; title: string; tag?: string }
+  | { layout: "strip"; images: ProjectImage[] }
+  | { layout: "story"; pages: { image: ProjectImage; text: string }[] }
+  | { layout: "embed"; url: string; title: string; tag?: string }
+  | { layout: "note"; title: string; text: string };
+
+// `size` sets the cut-outs' height. `bob`: each one floats gently up and down, as if in flight.
+export type CutoutGroup = {
+  tag: string;
+  size: "lg" | "md" | "sm";
+  bob?: true;
+  images: ProjectImage[];
+};
+
+// One block of a text section: a paragraph, a bulleted list, or both. `marker` flags a block, e.g.
+// "Past", where the story moves in time; `label` heads a point, e.g. "Aesthetic" or "Early Idea".
+export type TextBlock = { marker?: string; label?: string; text?: string; list?: string[] };
 
 // A decorative frame for a project's cover on the home page; the cover is placed in its window.
 // `window` is the empty area in the frame image, in the frame's own pixels.
@@ -27,6 +53,11 @@ export type Project = {
   width: number;
   height: number;
   coverFrame?: CoverFrame;
+  // Colour of the project page's headings (section titles, labels and image tags); defaults to ink.
+  accent?: string;
+  // Fonts of the project page. "hand" (default): handwritten headings. "display": Manrope throughout,
+  // with semibold headings. "aurore": La Belle Aurore script headings over Manrope text.
+  type?: "hand" | "display" | "aurore";
   sections?: ProjectSection[];
 };
 
@@ -63,11 +94,10 @@ export const PROJECTS: Project[] = [
         layout: "inset",
         images: [
           {
-            src: "/aangan/image2.png",
+            src: "/aangan/image3.png",
             width: 1920,
             height: 1080,
-            alt: "Storyboard: kitchen and tea boiling, pouring the tea, walking outside to the courtyard, sitting on the charpai, a reflection on a bangle, a swirling transition to the past and a dragonfly flying in the aangan",
-            tag: "Storyboard",
+            alt: "Pencil sketch of the courtyard: gate, trees, potted plants, a bench, a birdcage and a charpai in the foreground",
           },
         ],
       },
@@ -115,10 +145,11 @@ export const PROJECTS: Project[] = [
         layout: "inset",
         images: [
           {
-            src: "/aangan/image3.png",
+            src: "/aangan/image2.png",
             width: 1920,
             height: 1080,
-            alt: "Pencil sketch of the courtyard: gate, trees, potted plants, a bench, a birdcage and a charpai in the foreground",
+            alt: "Storyboard: kitchen and tea boiling, pouring the tea, walking outside to the courtyard, sitting on the charpai, a reflection on a bangle, a swirling transition to the past and a dragonfly flying in the aangan",
+            tag: "Storyboard",
           },
           {
             src: "/aangan/image4.png",
@@ -222,22 +253,79 @@ export const PROJECTS: Project[] = [
             height: 1080,
             alt: "Sketchbook page: title design, layout thumbnails, sea study and aquatic life studies",
           },
+        ],
+      },
+      {
+        layout: "text",
+        title: "Story Idea",
+        paragraphs: [
           {
-            src: "/kai/image7.png",
-            width: 4096,
-            height: 2897,
-            alt: "Underwater spread: sun rays fall on a glowing Kai among coral, a pink starfish and swirling sea plants",
+            text: "In the quiet ocean, a small Kai opened its eyes for the first time. It watched silver fish swim past, their scales shining as they touched its light. Curious, the glow reached out. A shell lit up, seaweed turned golden, and tiny fish left sparkling trails as they swam by. This made Kai happy and brave. Soon it began to play tickling fish tails, swirling around jellyfish, and poking at crabs that waved their claws in surprise. The sea looked like a festival, with glowing bubbles, bright trails, and plankton shining like stars. Kai laughed as it played, but in its excitement, a soft tangle of seaweed wrapped around it and held it tight. While it wriggled and flickered, one of the same fish swam past, and the glow thought with a smile, “oh no, I forgot to tease her.”",
+          },
+        ],
+      },
+      // The finished book, spread by spread, in one row.
+      {
+        layout: "strip",
+        images: [
+          { src: "/kai/image7.png", width: 4096, height: 2897, alt: "Underwater spread: sun rays fall on a newborn glow among coral, a pink starfish and swirling sea plants" },
+          { src: "/kai/image9.png", width: 4096, height: 2897, alt: "Comic spread: Kai opens its eyes for the first time while silver and pink fish swim past its light" },
+          { src: "/kai/image10.png", width: 4096, height: 2897, alt: "Kai gazes out at a swirl of water, little fish and glowing lily pads as the sea fills with colour" },
+          { src: "/kai/image11.png", width: 4096, height: 2897, alt: "Comic spread: Kai pokes a crab, swirls around a jellyfish and twirls past a starfish, leaving trails of light" },
+          { src: "/kai/image12.png", width: 4096, height: 2897, alt: "Kai sits on a big rock among dark seaweed while sparkling schools of fish stream overhead" },
+          { src: "/kai/image13.png", width: 4096, height: 2897, alt: "Kai, caught in tall seaweed, looks up as a pink fish swims by" },
+        ],
+      },
+      {
+        layout: "story",
+        pages: [
+          {
+            image: {
+              src: "/kai/image8.png",
+              width: 2480,
+              height: 3508,
+              alt: "Book cover: Kai, written and illustrated by Sonali Hedau, glowing beneath lily pads in a teal sea",
+            },
+            text: "This is the story of Kai, a tiny glow who opens its eyes underwater and discovers a bright, colorful world. I wanted to show how even the smallest light can make the whole ocean feel alive.",
           },
         ],
       },
       {
-        layout: "portrait",
+        layout: "embed",
+        url: "https://heyzine.com/flip-book/9e2ebd70ab.html",
+        title: "Kai, the graphic novel as a flipbook",
+        tag: "Flip through the book",
+      },
+    ],
+  },
+  // Images live in public/illustration/; the page has no text of its own, only the artwork.
+  {
+    slug: "concept-art",
+    title: "Concept Art",
+    cover: "/illustration/image3.png",
+    width: 1920,
+    height: 1080,
+    sections: [
+      {
+        layout: "full",
         images: [
           {
-            src: "/kai/image8.png",
-            width: 2480,
-            height: 3508,
-            alt: "Book cover: Kai, written and illustrated by Sonali Hedau, glowing beneath lily pads in a teal sea",
+            src: "/illustration/image1.png",
+            width: 1920,
+            height: 1080,
+            alt: "I developed these concepts through drawing and experimentation, building characters and environments together. Using color, mood, and lighting, I created a consistent visual world. Colour palette: #033045, #2A7281, #94D0D0, #EED237, #074143",
+          },
+          {
+            src: "/illustration/image2.png",
+            width: 1920,
+            height: 1080,
+            alt: "The concept art shown small at the centre of the page: a deep teal sea curling into great spiral waves around a glowing yellow creature",
+          },
+          {
+            src: "/illustration/image3.png",
+            width: 1920,
+            height: 1080,
+            alt: "Concept art: a deep teal underwater world curling into great spiral waves, with a shoal of fish, swaying plants and a small glowing yellow creature",
           },
         ],
       },
@@ -250,6 +338,9 @@ export const PROJECTS: Project[] = [
     cover: "/raw/image1.png",
     width: 1920,
     height: 1080,
+    // Raw Mango's bottle green.
+    accent: "#15643E",
+    type: "display",
     sections: [
       {
         layout: "inset",
@@ -260,23 +351,122 @@ export const PROJECTS: Project[] = [
             height: 1080,
             alt: "Raw Mango title card: green lettering on black with fine red-brown floral linework",
           },
+        ],
+      },
+      {
+        layout: "text",
+        title: "What is the Brand about?",
+        paragraphs: [
           {
-            src: "/raw/image2.png",
-            width: 1920,
-            height: 1080,
-            alt: "Brief: create a 30-second experimental advertisement film that communicates a brand's identity through visually engaging motion. The film focuses on a small traditional motif that morphs and transforms, symbolizing the blend of heritage and contemporary design. Through fluid animation, texture and rhythm, the film aims to evoke the essence of craftsmanship and culture while maintaining clarity for the audience.",
+            text: "Raw Mango is an Indian textile and clothing brand founded by designer Sanjay Garg. It is known for reinterpreting traditional handloom techniques through a contemporary design language.",
           },
+          {
+            text: "Working closely with craftspeople across Chanderi, Varanasi, West Bengal, and Rajasthan, the brand creates saris, garments, and textiles that blend heritage, craftsmanship, and modern aesthetics.",
+          },
+          {
+            text: "Raw Mango places strong emphasis on color, motifs, and cultural narratives, offering designs that are rooted in Indian philosophy yet refreshed for today’s world.",
+          },
+          {
+            text: "The brand stands for authenticity, craft preservation, and a refined visual identity that celebrates the beauty of handmade textiles.",
+          },
+        ],
+      },
+      {
+        layout: "text",
+        title: "Brand Analysis",
+        paragraphs: [
+          {
+            label: "Aesthetic",
+            list: [
+              "Rich, mature colors",
+              "Bold motifs",
+              "Minimal yet expressive visuals",
+              "Indian-rooted but contemporary",
+              "Handcrafted textures",
+              "Cultural identity",
+            ],
+          },
+          {
+            label: "Brand Values",
+            list: [
+              "Craft preservation",
+              "Design rooted in culture",
+              "Modern reinterpretation of tradition",
+              "Handmade processes",
+              "Minimal luxury",
+            ],
+          },
+        ],
+      },
+      {
+        layout: "inset",
+        images: [
           {
             src: "/raw/image3.png",
             width: 1920,
             height: 1080,
             alt: "Moodboard: pomegranates, embroidered saris, a kohl-lined gaze with a red bindi, pomegranate motif sketches and a palette of deep red, bottle green, near-black and blush",
           },
+        ],
+      },
+      {
+        layout: "text",
+        title: "Why I chose Raw Mango!",
+        paragraphs: [
+          {
+            list: [
+              "The brand’s design language aligns with mixed media & hand-drawn textures",
+              "Its motifs and forms inspire surreal visual transitions",
+              "Raw Mango’s identity balances tradition + modernity, which matches my animation style",
+              "The brand’s minimal and artistic visuals blend perfectly with magical realism",
+              "I wanted to work with a brand that values craft, narrative, and identity",
+            ],
+          },
+        ],
+      },
+      {
+        layout: "inset",
+        images: [
           {
             src: "/raw/image4.png",
             width: 1920,
             height: 1422,
             alt: "Motifs study: hand-drawn lotus, pomegranate, leaf, peacock and parrot motifs in mustard, brown, green and purple",
+          },
+        ],
+      },
+      {
+        layout: "text",
+        title: "Idea Development",
+        paragraphs: [
+          {
+            label: "Early Idea",
+            text: "I wanted to explore transformation and how motifs, human forms, objects, and threads can evolve into each other in a seamless flow of magical realism.",
+          },
+          {
+            label: "Reason",
+            text: "Raw Mango’s motifs and textiles evolve from handcraft, culture, and imagination. My animation mirrors that evolution.",
+          },
+          {
+            text: "The animation follows a continuous line of transformation. A shell becomes a human, a human becomes an eye, motifs awaken and stretch into threads, threads become a hand, the hand becomes a boat, water becomes hair, and identity re-emerges. Through magical realism, the film visualizes Raw Mango’s design philosophy: craft, memory, and evolution.",
+          },
+        ],
+      },
+      {
+        layout: "inset",
+        images: [
+          {
+            src: "/raw/image5.png",
+            width: 1920,
+            height: 1080,
+            alt: "Storyboard, part one: a dotted cross opens into a diamond motif, petals sprout into a flower and a bird, two birds meet, and an arch of flowers zooms out into an ornate frame",
+            tag: "Storyboard",
+          },
+          {
+            src: "/raw/image6.png",
+            width: 1920,
+            height: 1080,
+            alt: "Storyboard, part two: the frame closes in on a single flower, swirling lines carry a small bird across the page, and the sequence ends on the raw mango logo",
           },
         ],
       },
@@ -298,6 +488,16 @@ export const PROJECTS: Project[] = [
             height: 1080,
             alt: "A sepia sketch of a small stone house glowing with warm light in a dark forest",
           },
+        ],
+      },
+      {
+        layout: "note",
+        title: "Synopsis",
+        text: "Aditi saves an injured fairy, Lila, and cares for her, but soon becomes weak, troubled by strange dreams and marks on her wrist. One night, she discovers Lila’s secret: she is a vampire feeding on her blood, hiding behind a fairy’s glow. Heartbroken, Aditi traps Lila in a mirrored jar, draining her power. As morning comes, Aditi decides to find the truth about the magic and protect others from the hidden danger.",
+      },
+      {
+        layout: "inset",
+        images: [
           {
             src: "/visual/image2.png",
             width: 1920,
@@ -371,6 +571,139 @@ export const PROJECTS: Project[] = [
             alt: "Storyboard: Aditi kneels beside the lantern, peering into the grass",
           },
         ],
+      },
+    ],
+  },
+  // An interactive website; its illustrations and assets live in public/interactive/.
+  {
+    slug: "keoladeo",
+    title: "Birds of Keoladeo",
+    cover: "/interactive/illustration.jpeg",
+    width: 1600,
+    height: 900,
+    // The lotus mauve of the Keoladeo National Park logo.
+    accent: "#8E4B78",
+    type: "aurore",
+    sections: [
+      {
+        layout: "full",
+        images: [
+          {
+            src: "/interactive/illustration.jpeg",
+            width: 1600,
+            height: 900,
+            alt: "A painted wetland at Keoladeo: a still lake with lily pads under soft clouds and low hills, a tree on the bank and a pink heron wading",
+          },
+        ],
+      },
+      {
+        layout: "text",
+        title: "The Project",
+        paragraphs: [
+          {
+            text: "For the website project, I am exploring the birds of Keoladeo National Park, Rajasthan, focusing on both regional and migratory birds. The website will introduce visitors to the different bird species found in the park, their habitats, behaviours, and migration patterns. Through illustrations, information, and interactive visuals, the project aims to make learning about these birds simple, engaging, and visually immersive, while also highlighting the importance of Keoladeo’s wetland ecosystem.",
+          },
+        ],
+      },
+      {
+        layout: "text",
+        title: "Ideation",
+        paragraphs: [
+          {
+            label: "Monsoon | The Wetland",
+            text: "The monsoon brings rain to Keoladeo, filling the wetlands with water. The landscape turns green and food becomes abundant. Resident birds such as Painted Storks, Herons, Egrets and Ibises begin breeding making the wetland full of nests, chicks and activity.",
+          },
+        ],
+      },
+      {
+        layout: "full",
+        images: [
+          {
+            src: "/interactive/summer.png",
+            width: 4055,
+            height: 1080,
+            alt: "The wetland in the monsoon: green banks and grass around clear water, a lone tree on a small island, white clouds over the hills",
+          },
+        ],
+      },
+      {
+        layout: "text",
+        paragraphs: [
+          {
+            label: "Migration | The Journey",
+            text: "As the monsoon ends and winter approaches, birds from colder regions begin their long journey south. Following the Central Asian Flyway, they travel across countries and continents in search of warmer weather, food and safe wetlands. Their journey eventually brings them to Rajasthan.",
+          },
+          {
+            label: "Keoladeo | The Winter",
+            text: "During winter, Keoladeo becomes a temporary home for thousands of migratory birds. Bar-headed Geese, Greylag Geese, Northern Pintails, Gadwalls, Wigeons, pelicans and many other birds gather in its wetlands to feed, rest and survive the cold months.",
+          },
+        ],
+      },
+      {
+        layout: "full",
+        images: [
+          {
+            src: "/interactive/winter.png",
+            width: 4055,
+            height: 1080,
+            alt: "The same wetland in winter: dry khaki grass, pale water and a hazy pink sky over the hills",
+          },
+        ],
+      },
+      {
+        layout: "cutouts",
+        groups: [
+          {
+            tag: "Resident birds",
+            size: "lg",
+            images: [
+              { src: "/interactive/L1.png", width: 1828, height: 2143, alt: "A grey heron standing tall, its crest feathers trailing" },
+              { src: "/interactive/L2.png", width: 1724, height: 1246, alt: "A painted stork with pink and black wings, bending its long yellow bill down" },
+              { src: "/interactive/L3.png", width: 1873, height: 1276, alt: "A white stork with a curved yellow bill and red legs, wading" },
+              { src: "/interactive/L4.png", width: 1614, height: 1583, alt: "A white spoonbill with a wispy crest and a long black spoon-shaped bill" },
+            ],
+          },
+          {
+            tag: "Migratory birds",
+            size: "md",
+            bob: true,
+            images: [
+              { src: "/interactive/F1.png", width: 1286, height: 1011, alt: "A greylag goose in flight" },
+              { src: "/interactive/F4.png", width: 1321, height: 773, alt: "A bar-headed goose in flight" },
+              { src: "/interactive/F3.png", width: 1076, height: 799, alt: "A great white pelican in flight, with a pink bill" },
+              { src: "/interactive/F2.png", width: 1099, height: 997, alt: "A pale stork in flight, its wings washed with yellow" },
+            ],
+          },
+          {
+            tag: "Details",
+            size: "sm",
+            images: [
+              { src: "/interactive/butterfly.png", width: 1536, height: 1024, alt: "A peach and yellow butterfly with spotted wings" },
+              { src: "/interactive/dragonfly.png", width: 1536, height: 1024, alt: "A dragonfly with pale, gold-tipped wings" },
+              { src: "/interactive/flower.png", width: 420, height: 595, alt: "A pink lotus in bloom" },
+              { src: "/interactive/bud.png", width: 420, height: 595, alt: "A pink lotus bud" },
+              { src: "/interactive/lotusleaf.png", width: 344, height: 106, alt: "Floating lotus leaves" },
+            ],
+          },
+        ],
+      },
+      {
+        layout: "small",
+        images: [
+          {
+            src: "/interactive/image1.png",
+            width: 407,
+            height: 627,
+            alt: "A hand-drawn plan of the website: a cover page, the logo over water with a hover effect, a transition, clouds, rain falling on the land, storks nesting for breeding, and a footer",
+            tag: "Planning the website",
+          },
+        ],
+      },
+      {
+        layout: "site",
+        url: "https://bird-sanctuary-puce.vercel.app/",
+        title: "Birds of Keoladeo, the live website",
+        tag: "Live website",
       },
     ],
   },

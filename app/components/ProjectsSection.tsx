@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,10 +10,15 @@ type Card = { src: string; alt: string; slug?: string };
 const CARDS: Card[] = [
   { src: "/kai/front.png", alt: "Kai [Graphic Novel]", slug: "kai" },
   { src: "/aangan/front.png", alt: "Aangan – Short Film", slug: "aangan" },
-  { src: "/illustration/front.png", alt: "Concept Art" },
+  { src: "/illustration/front.png", alt: "Concept Art", slug: "concept-art" },
   { src: "/raw/front.png", alt: "Raw Mango [An experimental motion study]", slug: "raw-mango" },
   { src: "/visual/front.png", alt: "Visual Scripting", slug: "visual" },
+  { src: "/interactive/front.png", alt: "Birds of Keoladeo – Interactive Website", slug: "keoladeo" },
 ];
+
+// A card shows only once its front.png is in public/, so a new project can be listed before its
+// card is drawn without leaving a broken image on the page.
+const hasImage = ({ src }: Card) => existsSync(path.join(process.cwd(), "public", src));
 
 const CARD_WIDTH = 1350;
 const CARD_HEIGHT = 950;
@@ -30,7 +37,7 @@ export default function ProjectsSection() {
 
       {/* An odd last card sits centred under the others at the same size. */}
       <ul className="mt-8 grid gap-6 sm:mt-12 sm:grid-cols-2 sm:gap-8 sm:[&>li:last-child:nth-child(odd)]:col-span-2 sm:[&>li:last-child:nth-child(odd)]:mx-auto sm:[&>li:last-child:nth-child(odd)]:w-[calc(50%-1rem)]">
-        {CARDS.map((card) => (
+        {CARDS.filter(hasImage).map((card) => (
           <li key={card.src}>
             {card.slug ? (
               <Link

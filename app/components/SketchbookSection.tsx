@@ -5,6 +5,7 @@ import {
   COLOUR_SKETCHES,
   DIGITAL_ILLUSTRATIONS,
   DIGITAL_MARQUEE,
+  LIVE_SKETCHES,
   PENCIL_SKETCHES,
   type Sketch,
 } from "../sketches/sketches";
@@ -40,9 +41,10 @@ export default function SketchbookSection() {
         Sketchbook
       </h2>
 
-      <h3 className="mt-10 font-display text-xl font-bold text-[#5A83BB] sm:mt-14 sm:text-2xl">
-        Digital Illustration
-      </h3>
+      <h3 className="mt-10 font-display text-xl font-bold text-[#5A83BB] sm:mt-14 sm:text-2xl">Live Sketches</h3>
+      <Scatter sketches={LIVE_SKETCHES} />
+
+      <h3 className="mt-20 font-display text-xl font-bold text-[#5A83BB] sm:mt-28 sm:text-2xl">Digital Illustration</h3>
       <div className="mt-6 sm:mt-8">
         {/* Wider pages than the Colour rows, so a longer loop keeps the same drifting pace. */}
         <Marquee sketches={DIGITAL_MARQUEE} seconds={80} />
@@ -130,6 +132,70 @@ function Page({ sketch, index, decorative }: { sketch: Sketch; index: number; de
         // Pages slide in from off-screen, where lazy loading would leave them blank for a moment.
         loading="eager"
         className="h-48 w-auto sm:h-60"
+      />
+    </div>
+  );
+}
+
+// Where each live sketch sits on large screens, by index, in % of the board: `x`, `y` are its top-left
+// corner, `w` its width. They zigzag down the board (top left, lower right, left, lower right) and
+// lean alternately. Below that they stack, alternating left and right.
+const BOARD_ASPECT = "1088 / 1140";
+const SCATTER = [
+  { x: 2, y: 0, w: 40, tilt: -3 },
+  { x: 52, y: 15, w: 46, tilt: 2.5 },
+  { x: 6, y: 50, w: 44, tilt: 2 },
+  { x: 58, y: 60, w: 36, tilt: -2.5 },
+];
+
+// Live sketches drawn on the spot, scattered loose across the page with no paper mount: the cut-outs'
+// own washes and doodles blend into the white page, so the pieces seem to float.
+function Scatter({ sketches }: { sketches: Sketch[] }) {
+  return (
+    <div
+      className="relative mt-10 sm:mt-14 lg:mx-auto lg:aspect-(--board) lg:max-w-5xl"
+      style={{ "--board": BOARD_ASPECT } as CSSProperties}
+    >
+      <ul className="relative flex flex-col gap-16 sm:gap-20 lg:absolute lg:inset-0 lg:block">
+        {sketches.map((sketch, i) => {
+          const { x, y, w, tilt } = SCATTER[i % SCATTER.length];
+          const style = {
+            "--x": `${x}%`,
+            "--y": `${y}%`,
+            "--w": `${w}%`,
+            rotate: `${tilt}deg`,
+          } as CSSProperties;
+          return (
+            <li
+              key={`${sketch.src}-${sketch.crop ?? ""}`}
+              style={style}
+              className={`w-[82%] sm:w-[58%] lg:absolute lg:top-(--y) lg:left-(--x) lg:w-(--w) ${i % 2 ? "self-end" : "self-start"}`}
+            >
+              <Cropped sketch={sketch} sizes={`(min-width: 1024px) ${Math.round(w * 10.9)}px, 82vw`} />
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+// A sketch shown at its own shape, or only the slice its `crop` names: the box takes the slice's
+// shape and the full image is widened and shifted inside it so just that slice shows.
+function Cropped({ sketch, sizes }: { sketch: Sketch; sizes: string }) {
+  const [left, right] = sketch.crop ?? [0, 1];
+  const share = right - left;
+  return (
+    <div className="relative overflow-hidden" style={{ aspectRatio: `${sketch.width * share} / ${sketch.height}` }}>
+      <Image
+        src={sketch.src}
+        alt={sketch.alt}
+        width={sketch.width}
+        height={sketch.height}
+        // The image is drawn wider than the box by 1 / share; ask for a file that size.
+        sizes={share < 1 ? sizes.replace(/(d+)(px|vw)/g, (_, n, unit) => `${Math.round(n / share)}${unit}`) : sizes}
+        className="absolute top-0 h-full max-w-none"
+        style={{ width: `${100 / share}%`, left: `${(-left / share) * 100}%` }}
       />
     </div>
   );

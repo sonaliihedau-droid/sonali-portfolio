@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Manrope, Reenie_Beanie } from "next/font/google";
+import { Geist, Geist_Mono, La_Belle_Aurore, Manrope, Reenie_Beanie } from "next/font/google";
 import Nav from "./components/Nav";
 import "./globals.css";
 
@@ -25,6 +25,13 @@ const reenieBeanie = Reenie_Beanie({
   subsets: ["latin"],
 });
 
+// Flowing script, for project headings.
+const laBelleAurore = La_Belle_Aurore({
+  variable: "--font-la-belle-aurore",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Sonali — Illustration & Design",
   description: "Portfolio of illustrator and designer Sonali.",
@@ -34,7 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${reenieBeanie.variable} h-full antialiased [scrollbar-gutter:stable]`}
+      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${reenieBeanie.variable} ${laBelleAurore.variable} h-full antialiased [scrollbar-gutter:stable]`}
     >
       <body className="min-h-full flex flex-col">
         <Nav />

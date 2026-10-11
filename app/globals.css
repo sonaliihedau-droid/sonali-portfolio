@@ -13,6 +13,7 @@
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-manrope);
   --font-hand: var(--font-reenie);
+  --font-aurore: var(--font-la-belle-aurore);
 
   --ease-screen: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
@@ -33,6 +34,8 @@
   --animate-intro-in: photo-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
   /* Slides a track holding its content twice by one copy's width, so the loop has no seam. */
   --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
+  /* Floats a cut-out gently up and down; each element sets its own --duration and --delay. */
+  --animate-bob: bob var(--duration, 4s) ease-in-out var(--delay, 0s) infinite alternate;
 }
 
 @layer base {
@@ -159,5 +162,11 @@
 @keyframes marquee {
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes bob {
+  to {
+    transform: translateY(-8px);
   }
 }

@@ -1,5 +1,49 @@
 // `wide`: a long strip, shown across the whole collage instead of in a column.
-export type Sketch = { src: string; width: number; height: number; alt: string; wide?: true };
+// `crop`: show only this horizontal slice of the image, as [left, right] shares of its width.
+export type Sketch = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  wide?: true;
+  crop?: [number, number];
+};
+
+const LIVE_DIR = "/sktech/live-sketch";
+
+// Cut-out PNGs (transparent, with white washes meant to melt into the page), placed unmounted in
+// the Sketchbook's Live Sketches section, in the order the section zigzags through them. The
+// shopfront is cropped to its drawing (its left side is empty wash), and 3.png holds two separate
+// sketches, so it appears twice, cropped to each.
+export const LIVE_SKETCHES: Sketch[] = [
+  {
+    src: `${LIVE_DIR}/1.png`,
+    width: 777,
+    height: 835,
+    alt: "Two blue street lamps leaning together by a park bench, with doodled yellow flowers and swirling trees",
+  },
+  {
+    src: `${LIVE_DIR}/2.png`,
+    width: 1862,
+    height: 835,
+    crop: [0.46, 1],
+    alt: "A hand holding up an ink sketch of a shopfront on an orange pad, in front of the street it was drawn on",
+  },
+  {
+    src: `${LIVE_DIR}/3.png`,
+    width: 1889,
+    height: 920,
+    crop: [0, 0.52],
+    alt: "A watercolour of an old bungalow on a spiral pad, held up in front of the building's carved balcony",
+  },
+  {
+    src: `${LIVE_DIR}/3.png`,
+    width: 1889,
+    height: 920,
+    crop: [0.56, 1],
+    alt: "A watercolour of a garden gate among grasses, held against a wooden fence under a doodled branch",
+  },
+];
 
 const DIR = "/sktech/digital";
 
@@ -12,22 +56,34 @@ export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
     alt: "A cottage in a green meadow, seen through an opening in a carved stone wall",
   },
   {
-    src: `${DIR}/image12.png`,
-    width: 406,
-    height: 575,
-    alt: "A girl in tall grass, her face hidden behind a giant daisy under a blue sky",
-  },
-  {
     src: `${DIR}/image4.png`,
     width: 1920,
     height: 1080,
     alt: "A dreamy landscape of golden fields under a pastel sunset sky with billowing clouds",
   },
   {
+    src: `${DIR}/image12.png`,
+    width: 406,
+    height: 575,
+    alt: "A girl in tall grass, her face hidden behind a giant daisy under a blue sky",
+  },
+  {
+    src: `${DIR}/image24.png`,
+    width: 1920,
+    height: 1080,
+    alt: "A golden sun over a rolling blue sea, the clouds painted in swirling strokes",
+  },
+  {
     src: `${DIR}/image5.png`,
     width: 1920,
     height: 1318,
     alt: "Panda study: green sketches of pandas walking, climbing bamboo, sitting and rolling",
+  },
+  {
+    src: `${DIR}/image20.png`,
+    width: 595,
+    height: 420,
+    alt: "Bombay: a pencil-and-wash sketch of the Victoria Terminus with palms and street lamps",
   },
   {
     src: `${DIR}/image10.png`,
@@ -38,14 +94,14 @@ export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
   },
   {
     src: `${DIR}/image13.png`,
-    width: 3035,
-    height: 2150,
+    width: 1148,
+    height: 841,
     alt: "Bright green hills with fluffy sheep under a blue sky, painted in loose strokes",
   },
   {
     src: `${DIR}/image15.png`,
-    width: 1920,
-    height: 1080,
+    width: 3035,
+    height: 2150,
     alt: "A curly-haired girl in a green sweater crouching to look at a tiny sprout",
   },
   {
@@ -65,6 +121,37 @@ export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
     width: 1920,
     height: 1080,
     alt: "Dolphin study: pink line sketches of dolphins swimming, leaping and diving",
+  },
+  {
+    src: `${DIR}/image21.png`,
+    width: 1920,
+    height: 1080,
+    alt: "Guests in black evening wear at a party, painted in bold strokes against glowing pink arches",
+  },
+  {
+    src: `${DIR}/image23.png`,
+    width: 2800,
+    height: 540,
+    alt: "Five frames of a flamingo dipping for a fish, which slips away with a splash",
+    wide: true,
+  },
+  {
+    src: `${DIR}/image17.png`,
+    width: 1920,
+    height: 1080,
+    alt: "A girl in a green dress marching with a stick over her shoulder, four pink ducks following her",
+  },
+  {
+    src: `${DIR}/image18.png`,
+    width: 1920,
+    height: 1080,
+    alt: "A girl in a green dress looking up at a panda resting on a branch",
+  },
+  {
+    src: `${DIR}/image19.png`,
+    width: 1920,
+    height: 1080,
+    alt: "A girl lying in the grass reading a book beneath a giant red mushroom",
   },
 ];
 
@@ -105,6 +192,12 @@ export const DIGITAL_MARQUEE: Sketch[] = [
     width: 1920,
     height: 1080,
     alt: "A tree stump bound with rope, drawn in brown ink with swirls rising from it",
+  },
+  {
+    src: `${DIR}/image26.png`,
+    width: 1920,
+    height: 1080,
+    alt: "Guffy: sketches of a curly-crowned tree creature with spiralling eyes and branches",
   },
 ];
 
@@ -234,6 +327,12 @@ export const PENCIL_SKETCHES: Sketch[] = [
     alt: "Giant mushrooms rising out of curling grass",
   },
   {
+    src: `${PENCIL_DIR}/image17.png`,
+    width: 1920,
+    height: 1080,
+    alt: "Bell flowers with swirling petals, drooping on long curved stems",
+  },
+  {
     src: `${PENCIL_DIR}/image14.jpg`,
     width: 1380,
     height: 1599,
@@ -250,6 +349,12 @@ export const PENCIL_SKETCHES: Sketch[] = [
     width: 1316,
     height: 918,
     alt: "A two-storey house among pine trees, with wide steps leading up to it",
+  },
+  {
+    src: `${PENCIL_DIR}/image16.png`,
+    width: 1920,
+    height: 1080,
+    alt: "Animals: a ladybug and a dragonfly drawn in loose spirals",
   },
   {
     src: `${PENCIL_DIR}/image2.jpg`,
@@ -274,6 +379,12 @@ export const PENCIL_SKETCHES: Sketch[] = [
     width: 1079,
     height: 1600,
     alt: "A page of doodles: a bear, a moth, a birdcage, a tall man and a curly-haired girl",
+  },
+  {
+    src: `${PENCIL_DIR}/image15.png`,
+    width: 1920,
+    height: 1080,
+    alt: "A character sheet of a curly-haired girl with buns: full figure and a framed close-up of her face",
   },
   {
     src: `${PENCIL_DIR}/image7.jpg`,
