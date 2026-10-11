@@ -47,7 +47,7 @@ export const LIVE_SKETCHES: Sketch[] = [
 
 const DIR = "/sktech/digital";
 
-// Shown in order in the Sketchbook's Digital Illustration collage; a wide one splits the columns around it.
+// Shown in order in the Sketchbook's Illustration collage; a wide one splits the columns around it.
 export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
   {
     src: `${DIR}/image1.jpg`,
@@ -155,7 +155,7 @@ export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
   },
 ];
 
-// The sepia ink drawings, shown as a marquee above the Digital Illustration collage.
+// The sepia ink drawings, shown as a marquee above the Illustration collage.
 export const DIGITAL_MARQUEE: Sketch[] = [
   {
     src: `${DIR}/image7.png`,
@@ -203,7 +203,7 @@ export const DIGITAL_MARQUEE: Sketch[] = [
 
 const COLOUR_DIR = "/sktech/colour";
 
-// Marker pages for the Sketchbook's Colour marquees: the first row is COLOUR_ROW_SPLIT pages, the second the rest.
+// Marker pages for the two marquees in the Sketchbook's Sketches part: the first row is COLOUR_ROW_SPLIT pages, the second the rest.
 export const COLOUR_ROW_SPLIT = 8;
 export const COLOUR_SKETCHES: Sketch[] = [
   {
@@ -300,7 +300,7 @@ export const COLOUR_SKETCHES: Sketch[] = [
 
 const PENCIL_DIR = "/sktech/pencil";
 
-// Shown in order in the Sketchbook's Pencil collage, arranged so the columns come out even.
+// The pencil pages in the Sketchbook's Sketches part, piled until spread into a collage; arranged so the columns come out even.
 export const PENCIL_SKETCHES: Sketch[] = [
   {
     src: `${PENCIL_DIR}/image4.jpg`,

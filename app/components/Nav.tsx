@@ -2,17 +2,86 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 const LINKS = [
   { href: "/", label: "Home" },
   { href: "/#about", label: "About me" },
   { href: "/#projects", label: "Projects" },
   { href: "/#sketchbook", label: "Sketchbook" },
+  { href: "/#contact", label: "Contact" },
 ];
+
+// Within this many px of the top the bar always shows, plain and transparent over the hero.
+const TOP = 24;
+// It only starts hiding once the page has scrolled this far.
+const HIDE_AFTER = 120;
+// The scroll has to keep going one way this many px before the bar reacts, so trackpad wobble and
+// the rubber-band bounce at the ends of the page don't make it flicker.
+const TOLERANCE = 8;
+// On a mouse, bringing the pointer this close to the top edge calls the bar back.
+const REVEAL_EDGE = 40;
+
+// The bar slides away while reading down the page and comes back on any scroll up, now on a frosted
+// strip so its links stay readable over the artwork. It always shows at the top of the page, while
+// the About screen is open, and while one of its links has keyboard focus.
+function useHeadroom() {
+  const [hidden, setHidden] = useState(false);
+  const [atTop, setAtTop] = useState(true);
+  const [about, setAbout] = useState(false);
+
+  useEffect(() => {
+    let lastY = scrollY;
+    let travel = 0;
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+      // Clamp out overscroll past either end of the page.
+      const y = Math.min(Math.max(scrollY, 0), document.documentElement.scrollHeight - innerHeight);
+      const delta = y - lastY;
+      lastY = y;
+      // Distance moved in the current direction; reset when the direction flips.
+      travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
+
+      setAtTop(y <= TOP);
+      if (y <= TOP) setHidden(false);
+      else if (travel > TOLERANCE && y > HIDE_AFTER) setHidden(true);
+      else if (travel < -TOLERANCE) setHidden(false);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    const fine = matchMedia("(pointer: fine)");
+    const onPointer = (e: PointerEvent) => {
+      if (fine.matches && e.clientY < REVEAL_EDGE) setHidden(false);
+    };
+
+    const syncAbout = () => setAbout(location.hash === "#about");
+
+    frame = requestAnimationFrame(() => {
+      update();
+      syncAbout();
+    });
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("pointermove", onPointer, { passive: true });
+    addEventListener("hashchange", syncAbout);
+    return () => {
+      removeEventListener("scroll", onScroll);
+      removeEventListener("pointermove", onPointer);
+      removeEventListener("hashchange", syncAbout);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  // The About screen has its own backdrop; the bar floats over it as before.
+  return { hidden: hidden && !about, strip: !atTop && !about };
+}
 
 export default function Nav() {
   const pathname = usePathname();
+  const { hidden, strip } = useHeadroom();
 
   // On the home page, links stay in place: About me opens the About screen,
   // the others close it and scroll to their part of the page.
@@ -34,7 +103,13 @@ export default function Nav() {
   return (
     <nav
       aria-label="Main"
-      className="pointer-events-none fixed inset-x-0 top-0 z-70 flex justify-center gap-5 pt-6 sm:gap-10 sm:pt-7"
+      className={`pointer-events-none fixed inset-x-0 top-0 z-70 flex justify-center gap-4 pt-6 pb-4 transition-[translate,opacity,background-color,box-shadow,backdrop-filter] duration-350 ease-soft focus-within:translate-y-0 focus-within:opacity-100 sm:gap-10 sm:pt-7 sm:pb-5 motion-reduce:transition-[opacity,background-color] ${
+        hidden ? "-translate-y-full motion-reduce:translate-y-0 motion-reduce:opacity-0" : ""
+      } ${
+        strip
+          ? "bg-background/85 shadow-[0_1px_0_rgb(90_131_187/0.08),0_8px_24px_-16px_rgb(23_23_23/0.25)] backdrop-blur-md"
+          : ""
+      }`}
     >
       {LINKS.map(({ href, label }) => {
         const current =
@@ -51,7 +126,7 @@ export default function Nav() {
             href={href}
             onClick={(e) => onClick(e, href)}
             aria-current={current ? "page" : undefined}
-            className="pointer-events-auto font-display text-sm font-bold text-[#5A83BB] transition-opacity hover:opacity-60 sm:text-lg"
+            className="pointer-events-auto font-typewriter text-sm text-heading transition-opacity hover:opacity-60 sm:text-lg"
           >
             {label}
           </Link>

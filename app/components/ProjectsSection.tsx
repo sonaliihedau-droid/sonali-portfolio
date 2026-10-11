@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import Image from "next/image";
 import Link from "next/link";
+import { SectionTitle } from "./Headings";
 
 // Each project's front.png is a finished card: the artwork on textured paper with its title drawn in.
 // `slug` links the card to its project page; a card without one has no page yet and isn't a link.
@@ -31,9 +32,9 @@ export default function ProjectsSection() {
       aria-labelledby="projects-title"
       className="mx-auto w-full max-w-6xl px-4 pt-24 sm:px-8 sm:pt-32"
     >
-      <h2 id="projects-title" className="font-display text-3xl font-bold text-[#5A83BB] sm:text-4xl">
+      <SectionTitle id="projects-title" number={1}>
         Projects
-      </h2>
+      </SectionTitle>
 
       {/* An odd last card sits centred under the others at the same size. */}
       <ul className="mt-8 grid gap-6 sm:mt-12 sm:grid-cols-2 sm:gap-8 sm:[&>li:last-child:nth-child(odd)]:col-span-2 sm:[&>li:last-child:nth-child(odd)]:mx-auto sm:[&>li:last-child:nth-child(odd)]:w-[calc(50%-1rem)]">

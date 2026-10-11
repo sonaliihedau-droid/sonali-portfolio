@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  /* Cream paper; the grain on top of it comes from the `paper` utility. */
+  --background: #fbf8f1;
   --foreground: #171717;
 }
 
@@ -14,14 +15,14 @@
   --font-display: var(--font-manrope);
   --font-hand: var(--font-reenie);
   --font-aurore: var(--font-la-belle-aurore);
+  --font-typewriter: var(--font-special-elite);
+
+  /* Dark brown for the home page headings, the navbar and the Pencil pile's controls. */
+  --color-heading: #4b3621;
 
   --ease-screen: cubic-bezier(0.76, 0, 0.24, 1);
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --animate-horse-enter: horse-enter 4.5s cubic-bezier(0.25, 0.8, 0.3, 1) var(--enter-delay, 0s)
-    both paused;
-  --animate-horse-run: horse-gallop 0.75s cubic-bezier(0.45, 0.05, 0.35, 1)
-    var(--enter-delay, 0s) 6 both paused;
   --animate-horse-float: horse-float 6s ease-in-out infinite;
   --animate-horse-gallop: horse-gallop 0.7s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
   --animate-moon-hint: moon-hint 1.2s ease 2.8s forwards;
@@ -36,13 +37,61 @@
   --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
   /* Floats a cut-out gently up and down; each element sets its own --duration and --delay. */
   --animate-bob: bob var(--duration, 4s) ease-in-out var(--delay, 0s) infinite alternate;
+  /* A quick lift and wobble as the About doodle runs off; --lean sets which way it tips. */
+  --animate-scamper: scamper 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
   body {
-    background: var(--background);
+    background-color: var(--background);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.26 0 0 0 0.42 -0.15'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
     color: var(--foreground);
     font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  }
+}
+
+/* Paper: a soft cream ground with a fine warm grain, laid under everything (never over the
+   artwork or text). `paper` gives any surface that covers the page, like the About screen, the same
+   ground. */
+@utility paper {
+  background-color: var(--background);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55 0 0 0 0 0.42 0 0 0 0 0.26 0 0 0 0.42 -0.15'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+
+/* Scrollbar: a hairline in the heading brown for the track, with a slightly thicker short bar
+   sliding along it, like a pencil rule. Chromium and Safari draw it from these pseudo-elements;
+   Firefox, which doesn't support them, gets its thin native bar in the same brown. */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track:vertical {
+    background: linear-gradient(to right, transparent 5.5px, rgb(75 54 33 / 0.22) 5.5px 6.5px, transparent 6.5px);
+  }
+  ::-webkit-scrollbar-track:horizontal {
+    background: linear-gradient(to bottom, transparent 5.5px, rgb(75 54 33 / 0.22) 5.5px 6.5px, transparent 6.5px);
+  }
+  ::-webkit-scrollbar-thumb {
+    min-height: 48px;
+    border: 4.5px solid transparent;
+    border-radius: 9999px;
+    background: rgb(75 54 33 / 0.55) padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(75 54 33 / 0.8) padding-box;
+  }
+  ::-webkit-scrollbar-button,
+  ::-webkit-scrollbar-corner {
+    display: none;
+    background: transparent;
+  }
+
+  @supports not selector(::-webkit-scrollbar) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: rgb(75 54 33 / 0.55) transparent;
+    }
   }
 }
 
@@ -54,20 +103,6 @@
     0
   );
   will-change: transform;
-}
-
-@keyframes horse-enter {
-  0% {
-    transform: translateX(100vw);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }
 
 @keyframes horse-float {
@@ -168,5 +203,14 @@
 @keyframes bob {
   to {
     transform: translateY(-8px);
+  }
+}
+
+@keyframes scamper {
+  35% {
+    transform: translateY(-12px) rotate(var(--lean, 6deg));
+  }
+  70% {
+    transform: translateY(-2px) rotate(calc(var(--lean, 6deg) * -0.5));
   }
 }

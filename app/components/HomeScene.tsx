@@ -7,16 +7,15 @@ import MoonPull from "./MoonPull";
 
 // Positions are percentages of the 1920×1080 artboard of ill-home.png.
 const HORSES = [
-  { src: "/h3.png", w: 259, h: 150, left: 27.9, top: 18.4, width: 13.5, depth: 8, delay: 0, enterDelay: 0 },
-  { src: "/h2.png", w: 266, h: 171, left: 50.0, top: 30.1, width: 13.9, depth: 14, delay: -2.1, enterDelay: 0.3 },
-  { src: "/h1.png", w: 291, h: 169, left: 72.2, top: 23.5, width: 15.2, depth: 11, delay: -4.3, enterDelay: 0.6 },
+  { src: "/h3.png", w: 259, h: 150, left: 27.9, top: 18.4, width: 13.5, depth: 8, delay: 0 },
+  { src: "/h2.png", w: 266, h: 171, left: 50.0, top: 30.1, width: 13.9, depth: 14, delay: -2.1 },
+  { src: "/h1.png", w: 291, h: 169, left: 72.2, top: 23.5, width: 15.2, depth: 11, delay: -4.3 },
 ];
 
 export default function HomeScene() {
   const homeRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
-  const [ready, setReady] = useState(false);
   // Whether we pushed the #about history entry, so closing can step back instead of stacking.
   const pushedRef = useRef(false);
 
@@ -61,25 +60,6 @@ export default function HomeScene() {
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
       setAboutOpen(false);
     }
-  }, []);
-
-  // Hold the entrance until every image has decoded, so horses never pop in mid-run.
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    let done = false;
-    const ready = () => {
-      if (done) return;
-      done = true;
-      setReady(true);
-    };
-    const imgs = Array.from(stage.querySelectorAll("img"));
-    Promise.all(imgs.map((img) => img.decode().catch(() => {}))).then(ready);
-    const fallback = window.setTimeout(ready, 2500);
-    return () => {
-      done = true;
-      window.clearTimeout(fallback);
-    };
   }, []);
 
   useEffect(() => {
@@ -129,8 +109,6 @@ export default function HomeScene() {
 
   const stageBox = "relative aspect-video w-[min(100vw,calc(100svh*16/9))]";
   const layer = "absolute parallax motion-reduce:transform-none";
-  // Entrance animations stay paused (horses hidden off-screen) until the images are decoded.
-  const play = ready ? "[animation-play-state:running]" : "";
 
   return (
     <div
@@ -164,28 +142,23 @@ export default function HomeScene() {
                 top: `${horse.top}%`,
                 width: `${horse.width}%`,
                 "--depth": `${horse.depth}px`,
-                "--enter-delay": `${horse.enterDelay}s`,
               } as CSSProperties
             }
           >
-            <div className={`animate-horse-enter motion-reduce:animate-none ${play}`}>
-              <div className={`animate-horse-run motion-reduce:animate-none ${play}`}>
-                <div
-                  className="animate-horse-float motion-reduce:animate-none"
-                  style={{ animationDelay: `${horse.delay}s` }}
-                >
-                  <div className="group/horse origin-[45%_70%] cursor-pointer transition-[scale,filter] duration-600 ease-soft hover:scale-106 hover:drop-shadow-[0_10px_14px_rgb(46_84_170/0.22)] motion-reduce:transition-none motion-reduce:hover:scale-100">
-                    <Image
-                      src={horse.src}
-                      alt={`Blue horse galloping ${i + 1}`}
-                      width={horse.w}
-                      height={horse.h}
-                      priority
-                      draggable={false}
-                      className="block h-auto w-full select-none group-hover/horse:animate-horse-gallop motion-reduce:group-hover/horse:animate-none"
-                    />
-                  </div>
-                </div>
+            <div
+              className="animate-horse-float motion-reduce:animate-none"
+              style={{ animationDelay: `${horse.delay}s` }}
+            >
+              <div className="group/horse origin-[45%_70%] cursor-pointer transition-[scale,filter] duration-600 ease-soft hover:scale-106 hover:drop-shadow-[0_10px_14px_rgb(46_84_170/0.22)] motion-reduce:transition-none motion-reduce:hover:scale-100">
+                <Image
+                  src={horse.src}
+                  alt={`Blue horse galloping ${i + 1}`}
+                  width={horse.w}
+                  height={horse.h}
+                  priority
+                  draggable={false}
+                  className="block h-auto w-full select-none group-hover/horse:animate-horse-gallop motion-reduce:group-hover/horse:animate-none"
+                />
               </div>
             </div>
           </div>

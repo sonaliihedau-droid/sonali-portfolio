@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, La_Belle_Aurore, Manrope, Reenie_Beanie } from "next/font/google";
+import { Geist, Geist_Mono, La_Belle_Aurore, Manrope, Reenie_Beanie, Special_Elite } from "next/font/google";
 import Nav from "./components/Nav";
 import "./globals.css";
 
@@ -32,6 +32,13 @@ const laBelleAurore = La_Belle_Aurore({
   subsets: ["latin"],
 });
 
+// Typewriter, for the home page headings and the navbar.
+const specialElite = Special_Elite({
+  variable: "--font-special-elite",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Sonali — Illustration & Design",
   description: "Portfolio of illustrator and designer Sonali.",
@@ -41,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${reenieBeanie.variable} ${laBelleAurore.variable} h-full antialiased [scrollbar-gutter:stable]`}
+      className={`${geistSans.variable} ${geistMono.variable} ${manrope.variable} ${reenieBeanie.variable} ${laBelleAurore.variable} ${specialElite.variable} h-full antialiased [scrollbar-gutter:stable]`}
     >
       <body className="min-h-full flex flex-col">
         <Nav />
