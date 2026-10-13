@@ -8,10 +8,10 @@ export default function Home() {
   return (
     <main>
       <HomeScene />
-      <ProjectsSection />
-      <SketchbookSection />
       {/* Phones only; wider screens open About from the moon instead. */}
       <AboutSection />
+      <ProjectsSection />
+      <SketchbookSection />
       <ContactSection />
     </main>
   );

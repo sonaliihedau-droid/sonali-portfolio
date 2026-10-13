@@ -30,7 +30,7 @@ export default function SketchbookSection() {
       aria-labelledby="sketchbook-title"
       className="mx-auto w-full max-w-6xl px-4 pt-24 pb-24 sm:px-8 sm:pt-32 sm:pb-32"
     >
-      <SectionTitle id="sketchbook-title" number={2}>
+      <SectionTitle id="sketchbook-title" number={2} mobileNumber={3}>
         Sketchbook
       </SectionTitle>
 

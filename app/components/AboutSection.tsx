@@ -2,17 +2,17 @@ import Image from "next/image";
 import { ABOUT_PHOTO, ABOUT_TEXT } from "./about";
 import { SectionTitle } from "./Headings";
 
-// About me as a plain section, for phones only: there the moon pull is gone, and this sits just
-// above Contact. Its id is the one the navbar's About me link points at, so on a phone that link
-// scrolls here; on wider screens the section is hidden and the link opens the About screen.
+// About me as a plain section, for phones only: there the moon pull is gone, and this comes
+// straight after the hero. Its id is the one the navbar's About me link points at, so on a phone
+// that link scrolls here; on wider screens the section is hidden and the link opens the About screen.
 export default function AboutSection() {
   return (
     <section
       id="about"
       aria-labelledby="about-title"
-      className="mx-auto w-full max-w-6xl scroll-mt-20 px-4 pb-24 sm:hidden"
+      className="mx-auto w-full max-w-6xl scroll-mt-4 px-4 pt-14 sm:hidden"
     >
-      <SectionTitle id="about-title" number={3}>
+      <SectionTitle id="about-title" number={1}>
         About me
       </SectionTitle>
 

@@ -30,9 +30,9 @@ export default function ProjectsSection() {
     <section
       id="projects"
       aria-labelledby="projects-title"
-      className="mx-auto w-full max-w-6xl px-4 pt-14 sm:px-8 sm:pt-32"
+      className="mx-auto w-full max-w-6xl px-4 pt-24 sm:px-8 sm:pt-32"
     >
-      <SectionTitle id="projects-title" number={1}>
+      <SectionTitle id="projects-title" number={1} mobileNumber={2}>
         Projects
       </SectionTitle>
 
