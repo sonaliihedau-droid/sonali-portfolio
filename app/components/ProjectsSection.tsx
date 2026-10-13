@@ -10,7 +10,7 @@ type Card = { src: string; alt: string; slug?: string };
 
 const CARDS: Card[] = [
   { src: "/kai/front.png", alt: "Kai [Graphic Novel]", slug: "kai" },
-  { src: "/aangan/front.png", alt: "Aangan – Short Film", slug: "aangan" },
+  { src: "/aangan/front-new.png", alt: "Aangan – Short Film", slug: "aangan" },
   { src: "/illustration/front.png", alt: "Concept Art", slug: "concept-art" },
   { src: "/raw/front.png", alt: "Raw Mango [An experimental motion study]", slug: "raw-mango" },
   { src: "/visual/front.png", alt: "Visual Scripting", slug: "visual" },

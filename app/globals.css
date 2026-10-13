@@ -25,7 +25,6 @@
 
   --animate-horse-float: horse-float 6s ease-in-out infinite;
   --animate-horse-gallop: horse-gallop 0.7s cubic-bezier(0.45, 0.05, 0.35, 1) infinite;
-  --animate-moon-hint: moon-hint 1.2s ease 2.8s forwards;
   --animate-screen-in: screen-in 1.1s cubic-bezier(0.76, 0, 0.24, 1) both;
   --animate-screen-out: screen-out 1s cubic-bezier(0.76, 0, 0.24, 1) both;
   --animate-screen-fade: screen-fade 0.3s ease both;
@@ -125,12 +124,6 @@
   }
   65% {
     transform: translate(-4px, -2px) rotate(-3deg);
-  }
-}
-
-@keyframes moon-hint {
-  to {
-    opacity: 0.85;
   }
 }
 

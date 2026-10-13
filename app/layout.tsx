@@ -39,9 +39,25 @@ const specialElite = Special_Elite({
   subsets: ["latin"],
 });
 
+const description =
+  "Portfolio of Sonali Hedau, an illustrator and visual communication designer who finds stories in the little details of the world.";
+
+// The share image, tab icon and home-screen icon are the opengraph-image, icon and apple-icon
+// files beside this layout.
 export const metadata: Metadata = {
   title: "Sonali — Illustration & Design",
-  description: "Portfolio of illustrator and designer Sonali.",
+  description,
+  openGraph: {
+    type: "website",
+    siteName: "Sonali Hedau",
+    title: "Sonali Hedau — Illustration & Design",
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sonali Hedau — Illustration & Design",
+    description,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react";
 
 // Where the string ties onto moon.png, as a fraction of the image box (top of the crescent).
 const ATTACH = { x: 0.45, y: 0.28 };
+// Bottom of the crescent as a fraction of the image box height; the "pull me" hint sits below it.
+const CRESCENT_BOTTOM = 0.78;
 // Resting string length as a fraction of the stage height.
 const REST = 0.13;
 // How far (fraction of viewport height) the moon must be pulled down to open the page.
@@ -54,6 +56,7 @@ export default function MoonPull({ open, onPull }: Props) {
       moonH = moon.offsetHeight;
       moon.style.top = `${restLen - moonH * ATTACH.y}px`;
       root.style.setProperty("--rest", `${restLen}px`);
+      root.style.setProperty("--moon-bottom", `${restLen + moonH * (CRESCENT_BOTTOM - ATTACH.y)}px`);
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -65,6 +68,7 @@ export default function MoonPull({ open, onPull }: Props) {
     let drag: { id: number; sx: number; sy: number; moved: number } | null = null;
     const dragTarget = { x: 0, y: 0 };
     let armed = false;
+    let moving = false;
     let frame = 0;
     const t0 = performance.now();
 
@@ -101,6 +105,14 @@ export default function MoonPull({ open, onPull }: Props) {
 
       const rot = Math.max(-14, Math.min(14, -pos.x * 0.35 + vel.x * 0.8));
       moon.style.transform = `translate(${pos.x.toFixed(2)}px, ${pos.y.toFixed(2)}px) rotate(${rot.toFixed(2)}deg)`;
+
+      // Held, or still springing back from a pull or tug (the idle sway doesn't count): hides the hint.
+      const nowMoving =
+        !!drag || Math.abs(pos.y) > 0.5 || Math.abs(vel.y) > 0.2 || Math.abs(pos.x - sway) > 3;
+      if (nowMoving !== moving) {
+        moving = nowMoving;
+        root.classList.toggle("is-moving", moving);
+      }
 
       const tension = Math.max(0, Math.min(1, pos.y / (window.innerHeight * THRESHOLD)));
       root.style.setProperty("--tension", tension.toFixed(3));
@@ -139,7 +151,7 @@ export default function MoonPull({ open, onPull }: Props) {
       moon.setPointerCapture(e.pointerId);
       drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: 0 };
       dragTarget.x = dragTarget.y = 0;
-      root.classList.add("is-dragging", "has-pulled");
+      root.classList.add("is-dragging");
       kick();
     };
     const onMove = (e: PointerEvent) => {
@@ -180,7 +192,7 @@ export default function MoonPull({ open, onPull }: Props) {
   return (
     <div
       ref={rootRef}
-      // Drag state (is-dragging / is-armed / has-pulled) is toggled on this class list from the
+      // Drag state (is-dragging / is-armed / is-moving) is toggled on this class list from the
       // animation loop, so `open` lives in a data attribute where React can't overwrite them.
       className="group/moon [--tension:0]"
       data-open={open}
@@ -229,7 +241,7 @@ export default function MoonPull({ open, onPull }: Props) {
       <button
         ref={moonRef}
         type="button"
-        className="pointer-events-auto cursor-grab touch-none rounded-full border-0 bg-transparent p-0 transition-[filter] duration-300 will-change-transform [filter:drop-shadow(0_0_calc(var(--tension)*16px)_rgb(242_192_74/calc(var(--tension)*0.75)))] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-[#a3b8e8] focus-visible:outline-dashed group-[.is-armed]/moon:[filter:drop-shadow(0_0_18px_rgb(242_192_74/0.95))_brightness(1.08)] group-[.is-dragging]/moon:cursor-grabbing"
+        className="peer pointer-events-auto cursor-grab touch-none rounded-full border-0 bg-transparent p-0 transition-[filter] duration-300 will-change-transform [filter:drop-shadow(0_0_calc(var(--tension)*16px)_rgb(242_192_74/calc(var(--tension)*0.75)))] focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-[#a3b8e8] focus-visible:outline-dashed group-[.is-armed]/moon:[filter:drop-shadow(0_0_18px_rgb(242_192_74/0.95))_brightness(1.08)] group-[.is-dragging]/moon:cursor-grabbing"
         aria-label={open ? "Pull the moon to go back home" : "Pull the moon to open About me"}
         style={{
           position: "absolute",
@@ -254,7 +266,7 @@ export default function MoonPull({ open, onPull }: Props) {
       </button>
 
       <span
-        className="pointer-events-none absolute top-[calc(var(--rest,0px)_+_0.2vw)] left-[70%] animate-moon-hint text-[clamp(9px,0.7vw,12px)] tracking-[0.08em] whitespace-nowrap text-[#8aa2db] italic opacity-0 transition-opacity duration-400 group-[.has-pulled]/moon:animate-none group-data-[open=true]/moon:animate-none"
+        className="pointer-events-none absolute top-[calc(var(--moon-bottom,0px)_+_0.2vw)] left-1/2 -translate-x-1/2 font-hand text-[clamp(15px,1.2vw,22px)] leading-none whitespace-nowrap text-[#8aa2db] opacity-85 transition-opacity duration-400 peer-hover:opacity-0 group-[.is-moving]/moon:opacity-0 group-data-[open=true]/moon:opacity-0"
         aria-hidden="true"
       >
         pull me

@@ -1,5 +1,13 @@
 // `tag`: a handwritten label shown above the image, e.g. "Initial sketch".
-export type ProjectImage = { src: string; width: number; height: number; alt: string; tag?: string };
+// `caption`: a line of text under the image, e.g. the line of script a storyboard frame shows.
+export type ProjectImage = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  tag?: string;
+  caption?: string;
+};
 
 // "hero": fills the whole window on desktop (cropped to fit), full width on phones.
 // "full": edge to edge, images joined with no gap so they read as one continuous artwork.
@@ -335,7 +343,7 @@ export const PROJECTS: Project[] = [
   {
     slug: "raw-mango",
     title: "Raw Mango",
-    cover: "/raw/image1.png",
+    cover: "/raw/image1-new.png",
     width: 1920,
     height: 1080,
     // Raw Mango's bottle green.
@@ -346,12 +354,17 @@ export const PROJECTS: Project[] = [
         layout: "inset",
         images: [
           {
-            src: "/raw/image1.png",
+            src: "/raw/image1-new.png",
             width: 1920,
             height: 1080,
-            alt: "Raw Mango title card: green lettering on black with fine red-brown floral linework",
+            alt: "Raw Mango title card: रॉ मैंगो in green Devanagari lettering on cream paper patterned with faded floral block prints, with red-brown flower vines curling in from the corners",
           },
         ],
+      },
+      {
+        layout: "video",
+        youtubeId: "_1KhC6nAQ7c",
+        title: "Raw Mango – an experimental motion study",
       },
       {
         layout: "text",
@@ -470,6 +483,17 @@ export const PROJECTS: Project[] = [
           },
         ],
       },
+      {
+        layout: "inset",
+        images: [
+          {
+            src: "/raw/rough.gif",
+            width: 1920,
+            height: 1080,
+            alt: "Rough animation: a dotted cross drawn in red-brown crayon on cream paper, the opening of the storyboard sequence",
+          },
+        ],
+      },
     ],
   },
   {
@@ -510,65 +534,81 @@ export const PROJECTS: Project[] = [
             height: 1080,
             alt: "Lyla reference: pencil studies of the fairy kneeling by a tree, two close-ups of her face and a full-length pose",
           },
+        ],
+      },
+      // The storyboard: each frame with the line of script it shows.
+      {
+        layout: "inset",
+        images: [
           {
             src: "/visual/image4.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: a forest of twisted trees and hanging vines",
+            caption: "In the forest, towering trees block most of the light, their thick branches twisting together to form a dark canopy.",
           },
           {
             src: "/visual/image5.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: a forest path between tree trunks and tall grass",
+            caption: "In the forest, towering trees block most of the light, their thick branches twisting together to form a dark canopy.",
           },
           {
             src: "/visual/image6.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: close-up of bare feet walking along the forest path",
+            caption: "Aditi walks carefully, crunching over fallen leaves.",
           },
           {
             src: "/visual/image7.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: Aditi walks into the dark forest holding a glowing lantern",
+            caption: "Aditi walks carefully, crunching over fallen leaves.",
           },
           {
             src: "/visual/image8.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: close-up of the swinging lantern lighting up the trees",
+            caption: "She holds a lantern in one hand, its dim light barely piercing the heavy darkness.",
           },
           {
             src: "/visual/image9.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: Aditi raises the lantern, looking worried",
+            caption: "She holds a lantern in one hand, its dim light barely piercing the heavy darkness.",
           },
           {
             src: "/visual/image10.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: lantern light falls on a clearing beneath a large mushroom",
+            caption: "Revealing something small and pale at the base of a tree.",
           },
           {
             src: "/visual/image11.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: the tiny fairy lies curled up asleep in Aditi's palm",
+            caption: "Revealing something small and pale at the base of a tree.",
           },
           {
             src: "/visual/image12.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: the injured fairy crouches alone on the ground, wings folded",
+            caption: "Revealing something small and pale at the base of a tree.",
           },
           {
             src: "/visual/image13.png",
             width: 1920,
             height: 1080,
             alt: "Storyboard: Aditi kneels beside the lantern, peering into the grass",
+            caption: "Aditi kneels, her hands trembling as she gently wraps the creature in her scarf.",
           },
         ],
       },

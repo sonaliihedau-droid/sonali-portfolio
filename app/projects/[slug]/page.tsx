@@ -285,21 +285,48 @@ function Section({
       {section.images.map((image, i) => (
         <Tagged key={image.src} tag={image.tag} color={heading} type={type}>
           <div className={style.width}>
-            <Image
-              src={image.src}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
-              sizes={style.sizes}
-              priority={first && i === 0}
-              // The opening run is short enough on phones that all of it shows on the first screen.
-              loading={first && i > 0 ? "eager" : undefined}
-              className={`block h-auto w-full ${style.img ?? ""}`}
-            />
+            <Captioned caption={image.caption} type={type}>
+              <Image
+                src={image.src}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
+                sizes={style.sizes}
+                priority={first && i === 0}
+                // The opening run is short enough on phones that all of it shows on the first screen.
+                loading={first && i > 0 ? "eager" : undefined}
+                className={`block h-auto w-full ${style.img ?? ""}`}
+              />
+            </Captioned>
           </div>
         </Tagged>
       ))}
     </section>
+  );
+}
+
+// An image with a line of text centred close under it, kept to one line where the column is wide
+// enough (laptops up); on narrower screens it wraps rather than shrinking past reading size.
+function Captioned({
+  caption,
+  type,
+  children,
+}: {
+  caption: ProjectImage["caption"];
+  type: Type;
+  children: ReactNode;
+}) {
+  if (!caption) return children;
+  return (
+    <figure>
+      {children}
+      <figcaption
+        className={`mt-3 text-center text-sm leading-relaxed sm:mt-4 lg:whitespace-nowrap ${type.body}`}
+        style={{ color: INK }}
+      >
+        {caption}
+      </figcaption>
+    </figure>
   );
 }
 
