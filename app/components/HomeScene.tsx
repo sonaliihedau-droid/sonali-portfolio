@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import AboutPanel from "./AboutPanel";
 import MoonPull from "./MoonPull";
+import useIsMobile, { isMobile } from "./useIsMobile";
 
 // Positions are percentages of the 1920×1080 artboard of ill-home.png.
 const HORSES = [
@@ -18,10 +19,12 @@ export default function HomeScene() {
   const [aboutOpen, setAboutOpen] = useState(false);
   // Whether we pushed the #about history entry, so closing can step back instead of stacking.
   const pushedRef = useRef(false);
+  // Phones get no moon and no About screen: #about is the About section further down the page.
+  const mobile = useIsMobile();
 
   useEffect(() => {
     const sync = () => {
-      const open = window.location.hash === "#about";
+      const open = window.location.hash === "#about" && !isMobile();
       if (!open) pushedRef.current = false;
       setAboutOpen(open);
     };
@@ -33,7 +36,7 @@ export default function HomeScene() {
       window.removeEventListener("popstate", sync);
       window.removeEventListener("hashchange", sync);
     };
-  }, []);
+  }, [mobile]);
 
   // The About screen covers the window, so stop the page behind it from scrolling.
   useEffect(() => {
@@ -111,13 +114,16 @@ export default function HomeScene() {
   const layer = "absolute parallax motion-reduce:transform-none";
 
   return (
+    // On a phone a full-height hero would leave the 16:9 scene a thin strip in an empty screen, so
+    // the hero hugs the scene, which runs a little wider than the screen (its outer edges are bare
+    // paper) so the drawing itself is bigger.
     <div
       ref={homeRef}
-      className="relative grid min-h-svh place-items-center overflow-hidden [--mx:0] [--my:0]"
+      className="relative grid min-h-svh place-items-center overflow-hidden [--mx:0] [--my:0] max-sm:min-h-0 max-sm:grid-cols-[100%] max-sm:pt-12"
     >
       <div
         ref={stageRef}
-        className={`${stageBox} transition-[scale,opacity,filter] duration-1100 ease-screen motion-reduce:transition-none ${
+        className={`${stageBox} max-sm:w-[130vw] transition-[scale,opacity,filter] duration-1100 ease-screen motion-reduce:transition-none ${
           aboutOpen ? "scale-96 opacity-60 blur-[2px] motion-reduce:scale-100 motion-reduce:blur-none" : ""
         }`}
       >
@@ -127,7 +133,7 @@ export default function HomeScene() {
             alt="A girl standing on a flowering hillside beside a golden tree, reaching up to the sky"
             fill
             priority
-            sizes="100vw"
+            sizes="(max-width: 39.99rem) 130vw, 100vw"
             className="object-contain"
           />
         </div>
@@ -168,19 +174,22 @@ export default function HomeScene() {
       <AboutPanel open={aboutOpen} onClose={closeAbout} />
 
       {/* The moon floats above both screens: pull it to drop the About screen, pull again to go home.
-          It scrolls away with the scene, but pins to the window while About is open. */}
-      <div
-        className={`pointer-events-none ${aboutOpen ? "fixed" : "absolute"} inset-x-0 top-0 z-60 grid h-svh place-items-center`}
-      >
-        <div className={stageBox}>
-          <div
-            className={`${layer} pointer-events-none inset-0`}
-            style={{ "--depth": "5px" } as CSSProperties}
-          >
-            <MoonPull open={aboutOpen} onPull={aboutOpen ? closeAbout : openAbout} />
+          It scrolls away with the scene, but pins to the window while About is open. Not on phones
+          (hidden by CSS until the first render knows, then not rendered at all). */}
+      {!mobile && (
+        <div
+          className={`pointer-events-none ${aboutOpen ? "fixed" : "absolute"} inset-x-0 top-0 z-60 grid h-svh place-items-center max-sm:hidden`}
+        >
+          <div className={stageBox}>
+            <div
+              className={`${layer} pointer-events-none inset-0`}
+              style={{ "--depth": "5px" } as CSSProperties}
+            >
+              <MoonPull open={aboutOpen} onPull={aboutOpen ? closeAbout : openAbout} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

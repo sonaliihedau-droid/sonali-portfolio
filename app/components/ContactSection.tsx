@@ -10,10 +10,10 @@ const CROP = { x: 920, y: 300, width: 1490, height: 1450 };
 
 export default function ContactSection() {
   return (
-    <section id="contact" aria-labelledby="contact-title" className="pb-6 sm:pb-10">
+    <section id="contact" aria-labelledby="contact-title" className="scroll-mt-20 pb-6 sm:pb-10">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-8">
-        <div className="flex items-center justify-between gap-6">
-          <SectionTitle id="contact-title" number={3}>
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-5">
+          <SectionTitle id="contact-title" number={3} mobileNumber={4}>
             Contact
           </SectionTitle>
           <ContactIcons className="gap-4 sm:gap-6" iconClassName="size-8 sm:size-10" />

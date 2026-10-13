@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ABOUT_PHOTO, ABOUT_TEXT } from "./about";
 import ContactIcons from "./ContactIcons";
 
 type Props = {
@@ -189,10 +190,8 @@ export default function AboutPanel({ open, onClose }: Props) {
             }`}
           >
             <Image
-              src="/about-me.png"
-              alt="Sonali smiling over her shoulder on a tree-lined street"
-              width={661}
-              height={418}
+              {...ABOUT_PHOTO}
+              alt={ABOUT_PHOTO.alt}
               sizes="(max-aspect-ratio: 1/1) 100vw, 36vw"
               className="block h-auto w-full"
             />
@@ -205,12 +204,7 @@ export default function AboutPanel({ open, onClose }: Props) {
             }`}
           >
             <p className="m-0 -mt-[0.45em] font-typewriter text-[clamp(13px,1.05vw,18px)] leading-[1.85] tracking-wide text-pretty text-[#5A83BB]">
-              I am Sonali Hedau, a Visual Communication Designer who find stories in the little
-              details of the world the quiet moments, fleeting gestures, and things often left
-              unnoticed. I turn these observations into visual stories, moving between imagination
-              and execution through illustration and concept development. My work is rooted in
-              curiosity, simplicity, and the belief that even the smallest details can tell a
-              meaningful story
+              {ABOUT_TEXT}
             </p>
             <ContactIcons
               className="gap-[clamp(14px,1.6vw,26px)] portrait:mt-6"

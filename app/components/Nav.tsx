@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type MouseEvent } from "react";
+import { isMobile } from "./useIsMobile";
 
 const LINKS = [
   { href: "/", label: "Home" },
@@ -58,7 +59,8 @@ function useHeadroom() {
       if (fine.matches && e.clientY < REVEAL_EDGE) setHidden(false);
     };
 
-    const syncAbout = () => setAbout(location.hash === "#about");
+    // On a phone #about is just a section of the page, not the About screen.
+    const syncAbout = () => setAbout(location.hash === "#about" && !isMobile());
 
     frame = requestAnimationFrame(() => {
       update();
@@ -83,8 +85,8 @@ export default function Nav() {
   const pathname = usePathname();
   const { hidden, strip } = useHeadroom();
 
-  // On the home page, links stay in place: About me opens the About screen,
-  // the others close it and scroll to their part of the page.
+  // On the home page, links stay in place: About me opens the About screen (on a phone, scrolls to
+  // the About section), the others close it and scroll to their part of the page.
   const onClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     if (pathname !== "/" || (href !== "/" && !href.startsWith("/#"))) return;
     e.preventDefault();
@@ -93,7 +95,7 @@ export default function Nav() {
       window.history.pushState(null, "", hash || "/");
       window.dispatchEvent(new HashChangeEvent("hashchange"));
     }
-    if (hash === "#about") return;
+    if (hash === "#about" && !isMobile()) return;
     const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
     const target = hash ? document.querySelector(hash) : null;
     if (target) target.scrollIntoView({ behavior });
@@ -103,7 +105,7 @@ export default function Nav() {
   return (
     <nav
       aria-label="Main"
-      className={`pointer-events-none fixed inset-x-0 top-0 z-70 flex justify-center gap-4 pt-6 pb-4 transition-[translate,opacity,background-color,box-shadow,backdrop-filter] duration-350 ease-soft focus-within:translate-y-0 focus-within:opacity-100 sm:gap-10 sm:pt-7 sm:pb-5 motion-reduce:transition-[opacity,background-color] ${
+      className={`pointer-events-none fixed inset-x-0 top-0 z-70 flex flex-wrap justify-center gap-x-3.5 gap-y-1 px-3 pt-5 pb-3.5 transition-[translate,opacity,background-color,box-shadow,backdrop-filter] duration-350 ease-soft focus-within:translate-y-0 focus-within:opacity-100 sm:gap-10 sm:pt-7 sm:pb-5 motion-reduce:transition-[opacity,background-color] ${
         hidden ? "-translate-y-full motion-reduce:translate-y-0 motion-reduce:opacity-0" : ""
       } ${
         strip
@@ -126,7 +128,7 @@ export default function Nav() {
             href={href}
             onClick={(e) => onClick(e, href)}
             aria-current={current ? "page" : undefined}
-            className="pointer-events-auto font-typewriter text-sm text-heading transition-opacity hover:opacity-60 sm:text-lg"
+            className="pointer-events-auto font-typewriter text-[13px] text-heading transition-opacity hover:opacity-60 sm:text-lg"
           >
             {label}
           </Link>
