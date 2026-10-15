@@ -17,6 +17,7 @@ import Tile, { MOUNT, TILTS } from "./Tile";
 const TAPE_TILTS = [-4, 3, -2, 5, -5, 2];
 
 const COLUMN_SIZES = "(min-width: 1152px) 340px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw";
+const PAIR_SIZES = "(min-width: 1152px) 520px, (min-width: 640px) 45vw, 90vw";
 const WIDE_SIZES = "(min-width: 1152px) 1000px, 90vw";
 
 // Marquee pages are a fixed height (h-48, sm:h-60), so their width follows their shape.
@@ -215,10 +216,18 @@ function Collage({ sketches }: { sketches: Sketch[] }) {
             <Tile sketch={run[0]} index={sketches.indexOf(run[0])} sizes={WIDE_SIZES} />
           </div>
         ) : (
-          <ul key={run[0].src} className="columns-1 gap-8 px-2 sm:columns-2 sm:gap-10 lg:columns-3">
+          // Four tiles in three columns would leave one standing alone, so a run of four stays in two.
+          <ul
+            key={run[0].src}
+            className={`columns-1 gap-8 px-2 sm:columns-2 sm:gap-10 ${run.length === 4 ? "" : "lg:columns-3"}`}
+          >
             {run.map((sketch) => (
               <li key={sketch.src} className="mb-8 break-inside-avoid sm:mb-10">
-                <Tile sketch={sketch} index={sketches.indexOf(sketch)} sizes={COLUMN_SIZES} />
+                <Tile
+                  sketch={sketch}
+                  index={sketches.indexOf(sketch)}
+                  sizes={run.length === 4 ? PAIR_SIZES : COLUMN_SIZES}
+                />
               </li>
             ))}
           </ul>

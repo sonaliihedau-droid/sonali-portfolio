@@ -48,6 +48,8 @@ export const LIVE_SKETCHES: Sketch[] = [
 const DIR = "/sktech/digital";
 
 // Shown in order in the Sketchbook's Illustration collage; a wide one splits the columns around it.
+// Each block is grouped so its columns end level: the cottage beside four near-square pieces,
+// the vine room beside four landscapes, then the last four landscapes as a two-by-two.
 export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
   {
     src: `${DIR}/image1.jpg`,
@@ -56,34 +58,28 @@ export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
     alt: "A cottage in a green meadow, seen through an opening in a carved stone wall",
   },
   {
-    src: `${DIR}/image4.png`,
-    width: 1920,
-    height: 1080,
-    alt: "A dreamy landscape of golden fields under a pastel sunset sky with billowing clouds",
-  },
-  {
-    src: `${DIR}/image12.png`,
-    width: 406,
-    height: 575,
-    alt: "A girl in tall grass, her face hidden behind a giant daisy under a blue sky",
-  },
-  {
-    src: `${DIR}/image24.png`,
-    width: 1920,
-    height: 1080,
-    alt: "A golden sun over a rolling blue sea, the clouds painted in swirling strokes",
-  },
-  {
     src: `${DIR}/image5.png`,
     width: 1920,
     height: 1318,
     alt: "Panda study: green sketches of pandas walking, climbing bamboo, sitting and rolling",
   },
   {
+    src: `${DIR}/image13.png`,
+    width: 1148,
+    height: 841,
+    alt: "Bright green hills with fluffy sheep under a blue sky, painted in loose strokes",
+  },
+  {
     src: `${DIR}/image20.png`,
     width: 595,
     height: 420,
     alt: "Bombay: a pencil-and-wash sketch of the Victoria Terminus with palms and street lamps",
+  },
+  {
+    src: `${DIR}/image15.png`,
+    width: 3035,
+    height: 2150,
+    alt: "A curly-haired girl in a green sweater crouching to look at a tiny sprout",
   },
   {
     src: `${DIR}/image10.png`,
@@ -93,22 +89,22 @@ export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
     wide: true,
   },
   {
-    src: `${DIR}/image13.png`,
-    width: 1148,
-    height: 841,
-    alt: "Bright green hills with fluffy sheep under a blue sky, painted in loose strokes",
-  },
-  {
-    src: `${DIR}/image15.png`,
-    width: 3035,
-    height: 2150,
-    alt: "A curly-haired girl in a green sweater crouching to look at a tiny sprout",
-  },
-  {
     src: `${DIR}/image16.jpg`,
     width: 2480,
     height: 3508,
     alt: "Two figures embracing on the floor of a sunlit room overgrown with vines",
+  },
+  {
+    src: `${DIR}/image4.png`,
+    width: 1920,
+    height: 1080,
+    alt: "A dreamy landscape of golden fields under a pastel sunset sky with billowing clouds",
+  },
+  {
+    src: `${DIR}/image24.png`,
+    width: 1920,
+    height: 1080,
+    alt: "A golden sun over a rolling blue sea, the clouds painted in swirling strokes",
   },
   {
     src: `${DIR}/image14.png`,
@@ -123,17 +119,17 @@ export const DIGITAL_ILLUSTRATIONS: Sketch[] = [
     alt: "Dolphin study: pink line sketches of dolphins swimming, leaping and diving",
   },
   {
-    src: `${DIR}/image21.png`,
-    width: 1920,
-    height: 1080,
-    alt: "Guests in black evening wear at a party, painted in bold strokes against glowing pink arches",
-  },
-  {
     src: `${DIR}/image23.png`,
     width: 2800,
     height: 540,
     alt: "Five frames of a flamingo dipping for a fish, which slips away with a splash",
     wide: true,
+  },
+  {
+    src: `${DIR}/image21.png`,
+    width: 1920,
+    height: 1080,
+    alt: "Guests in black evening wear at a party, painted in bold strokes against glowing pink arches",
   },
   {
     src: `${DIR}/image17.png`,
