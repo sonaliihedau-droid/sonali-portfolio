@@ -45,7 +45,7 @@ const description =
 // The share image, tab icon and home-screen icon are the opengraph-image, icon and apple-icon
 // files beside this layout.
 export const metadata: Metadata = {
-  title: "Sonali — Illustration & Design",
+  title: "Sonali Hedau",
   description,
   openGraph: {
     type: "website",
